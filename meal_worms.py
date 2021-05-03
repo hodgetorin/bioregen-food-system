@@ -61,14 +61,14 @@ mw_fats  =np.zeros(n_days)
 
 # first 2 weeks: eggs hatch
 for m in range (1,21):
-        mw_eggs[m] = mw_eggs[m-1]-(mw_eggs_start*(0.3/2))
+        mw_eggs[m] = mw_eggs[m-1]-(mw_eggs_start*(0.1))
         mw_pop[m] = 0
         mw_larvae[m] = 0
         mw_beetles[m] = 0
 #weeks 3-14: mealworms growing
 for m in range (21,105):
         mw_eggs[m] = 0
-        mw_pop[m] = mw_eggs[2]
+        mw_pop[m] = mw_eggs[14]
         mw_larvae[m] = 0
         mw_beetles[m] = 0
 #weeks 15-22: mealworms ready for harvest
@@ -82,16 +82,16 @@ for m in range (105,161):
 for m in range (161,175):
         mw_eggs[m] = 0
         mw_pop[m] = 0
-        mw_larvae[m] = mw_pop[22]
+        mw_larvae[m] = mw_pop[154]
         mw_beetles[m] = 0
 #weeks 25-37: beetles living and reproducing
 for m in range (175,266):
-        mw_beetles[m] = mw_larvae[24]
+        mw_beetles[m] = mw_larvae[168]
 
 #cycle 2
-eggs_per_week = 0.5*mw_beetles[m-1]*40
-eggs_hatching = eggs_per_week*0.7
-mw_eggs[27] = mw_eggs[m-1]+eggs_hatching
+eggs_per_week = 0.5*mw_beetles[m-1]*6
+eggs_hatching = eggs_per_week*0.1
+mw_eggs[189] = mw_eggs[m-1]+eggs_hatching
 
 for m in range (196,297,14):
     mw_eggs[m] = mw_eggs[m-1]+eggs_hatching
@@ -124,7 +124,7 @@ for j in range (0,n_days):
 
 print(mw_possible)
 
-plt.plot(t,mw_pop,weeks,mw_eggs,weeks,mw_larvae,weeks,mw_beetles)
+plt.plot(t,mw_pop,t,mw_eggs,t,mw_larvae,t,mw_beetles)
 plt.legend(['mealworm population','mealworm egg population','larvae population','adult beetle population'], loc = 'upper left') 
 plt.ylabel("population"); plt.xlabel("days")
 plt.show()
