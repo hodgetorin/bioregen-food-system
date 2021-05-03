@@ -1,5 +1,4 @@
 # Combined Final
-
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -29,7 +28,6 @@ p_su[0] = 0 # biomass of entire sunflower plants [g]
 p_su_kcal = 6.25 # sunflower seeds calories [kcal/g]
 
 
-
 ## Initializing Mushrooms ##
 m_ed = np.zeros(n_days) # edible mushrooms produced 
 m_blocks = np.zeros(n_days) # number of substrate blocks
@@ -37,10 +35,8 @@ sms = np.zeros(n_days) # spent mushroom substrate mass (g)
 m_lc = np.zeros(n_days) # liquid culture per day
 min_sub_to_start = 1000 # placeholder value. need 1000g inedible mass to start a mushroom run
 
-
 ## Main loop ##
-
-for i in range(n_days):
+for i in range(1, n_days):
     if i % H_su == 0: # Harvest sunflowers every 100 days
         p_su[i] = GA_su * GD_su # Growing area * growing density 
         
@@ -58,7 +54,6 @@ for i in range(n_days):
         m_ed[i] = 680
         m_blocks[i] = -4 # 4 blocks become spent and are no longer producing
         sms[i] = (1082.5 - 680) * 4 # the mass of spent substate equals the difference in substrate input minus fresh wt harvested
-
 
 # time array for plotting:
 t = np.linspace(1,n_days,n_days)
