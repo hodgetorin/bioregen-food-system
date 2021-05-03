@@ -31,7 +31,10 @@ p_su_kcal = 6.25 # sunflower seeds calories [kcal/g]
 
 
 ## Initializing Mushrooms ##
-m_ed = np.zeros(n_days)
+m_ed = np.zeros(n_days) # edible mushrooms produced 
+m_blocks = np.zeros(n_days) # number of substrate blocks
+sms = np.zeros(n_days) # spent mushroom substrate mass (g)
+m_lc = np.zeros(n_days) # liquid culture per day
 min_sub_to_start = 1000 # placeholder value. need 1000g inedible mass to start a mushroom run
 
 
@@ -44,12 +47,17 @@ for i in range(n_days):
     p_ed_su[i] = p_su[i] * HI_su
     p_ined_su[i] = (1-HI_su)*p_su[i] # inedible sunflower mass produced per day 
     
+    if i % 5 == 0: # every 5 days:
+        m_blocks[i] = 4 # assuming BE = 100%, mushroom mass == inedible plant mass, harvested 30 days later
+        m_lc[i] = 2.5 * 4 # 10 mL of liquid culture used to innoculate bags
+    
     # Sum the inedible plant mass:
     p_ined[i] = p_ined_su[i] # + p_ined_sp[i] + ... 
     
-    if sum(p_ined) >= min_sub_to_start:
-        if i<=(n_days-31):
-            m_ed[i+30] = p_ined[i] # assuming BE = 100%, mushroom mass == inedible plant mass, harvested 30 days later
+    if i % 28 == 0: # every 28 days:
+        m_ed[i] = 680
+        m_blocks[i] = -4 # 4 blocks become spent and are no longer producing
+        sms[i] = (1082.5 - 680) * 4 # the mass of spent substate equals the difference in substrate input minus fresh wt harvested
 
 
 # time array for plotting:
