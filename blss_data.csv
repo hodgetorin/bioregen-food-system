@@ -1,0 +1,69 @@
+whole program,
+trip duration,365
+number of people,8
+growing area ??,
+,
+plants,
+calories per g spinach,0.23
+protein per g spinach,0.0286
+carbs per g spinach,0.036
+fats per g spinach,0.0039
+Harvest index spinach,0.9
+harvest duration spinach,42
+calories per g sunflowers,6.25
+protein per g sunflowers,0.225
+carbs per g sunflowers,0.15
+fats per g sunflowers,0.575
+Harvest index sunflowers,0.4
+harvest duration sunflowers,100
+calories per g quinoa,3.68
+protein per g quinoa,0.1412
+carbs per g quinoa,0.6416
+fats per g quinoa,0.0607
+Harvest index quinoa,0.3
+harvest duration quinoa,100
+growing area for spinach,7
+growing density spinach,36000
+growing area for sunflowers,1
+growing density sunflowers,60000
+growing area for quinoa,12
+growing density quinoa,81000
+,
+mushrooms,
+calories per,
+protein per,
+carbs per,
+fats per,
+,
+meal worms,
+starting eggs,10000
+starting larvae,0
+starting beetles,0
+mealworms per square foot,500
+food requirement,250
+egg time duration,21
+larvae growth time duration,84
+larvae harvest time duration,56
+pupae time duration,14
+beetle time duration,84
+time to breed,14
+surivial rate,0.75
+calories per,0.206
+protein per,0.0491
+carbs per,0.0031
+fats per,0.035
+number harvested each day,500
+,
+fish,
+starting tilapia,20
+time to breed ,28
+time to harvest,183
+,
+,
+,
+,
+,
+calories per,
+protein per,
+carbs per,
+fats per,
