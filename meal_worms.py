@@ -130,7 +130,7 @@ plt.ylabel("population"); plt.xlabel("days")
 plt.show()
 plt.close()
  
-plt.plot(t,mw_pop,weeks,mw_harvest)  
+plt.plot(t,mw_pop,t,mw_harvest)  
 plt.legend(['mealworm population','mealworms harvested'])
 plt.ylabel("population"); plt.xlabel("days")  
 plt.show()
