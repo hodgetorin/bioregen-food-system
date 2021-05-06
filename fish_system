@@ -1,0 +1,49 @@
+"""
+
+import numpy as np
+
+days = 365
+crew = 8
+fish_start = 50
+total_fish = 0
+eggs = 600
+s_rate = 0.75
+growth = 183
+days_eggs = 0 
+fish_cal = 98
+fish_prot = 0.26
+fish_carb = 0
+fish_fat = 0.025
+avg_weight = 2.4
+amount_feed = 0.02
+feed = 0
+
+
+
+
+def counter:
+    while days_eggs <56:
+        days_eggs = days_eggs +1
+
+if days_eggs = 56:
+    #produce more eggs
+
+feed = avg_weight * grown_fish * amount_feed
+mw_feed = feed * 0.67
+mush_feed = feed * 0.33
+
+
+grown_fish = eggs * s_rate
+
+harvest = grown_fish
+while harvest > 0:
+    harvest_daily = harvest - crew 
+    
+if harvest > 0:
+    ed_cal = avg_weight * fish_cal
+    ed_prot = avg_weight * fish_prot
+    ed_fat = avg_weight * fish_fat
+    ed_carb = avg_weight * fish_carb
+
+
+    
