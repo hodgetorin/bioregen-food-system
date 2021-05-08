@@ -28,6 +28,7 @@ t_pupae = 14
 t_beetles = 84
 t_breed = 14
 
+#SPENT MUSHROOM SUBSTRATE
 sms = 100000
 
 calories_per_mw = 2.06*0.1
@@ -40,8 +41,9 @@ harvest_2 = 2500
 mw_per_sqft = 500
 
 
-#variables
+#LIMITING FACTORS
 mw_possible_1 = mw_per_sqft*mw_space
+#spent mushroom substrare limiting
 mw_possible_2 = sms/250
 if mw_possible_1 < mw_possible_2:
     mw_possible = mw_possible_1
