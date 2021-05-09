@@ -1,14 +1,8 @@
 # Combined Final
-# -*- coding: utf-8 -*-
-"""
-Created on Sun May  2 19:28:39 2021
 
-@author: Torin
-"""
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
 
 # Database access:
 file_in="blss_data.csv"
@@ -25,11 +19,6 @@ ideal_carbs = np.zeros(n_days)
 ideal_fats  =np.zeros(n_days)
 
 
-shroom_ed = np.zeros(n_days)
-sms = np.zeros(n_days)
-
-
-
 ############################
 ##   Initializing Plants  ##
 ############################
@@ -37,12 +26,12 @@ sms = np.zeros(n_days)
 # H --> Days until maturation/days until harvest
 H_su = int(df.iloc[16][0]) # sunflowers
 H_sp = int(df.iloc[10][0]) # spinach
-H_qu = int(df.iloc[22][0]) # quinuoa 
+H_qu = int(df.iloc[22][0]) # quinoa 
 
 # HI --> harvest indexes: % of plant biomass that is edible
-HI_su = int(df.iloc[15][0]) # sunflowers
-HI_sp =int(df.iloc[9][0]) # spinach
-HI_qu = int(df.iloc[21][0]) # quinuoa
+HI_su = df.iloc[15][0] # sunflowers
+HI_sp = df.iloc[9][0] # spinach
+HI_qu = df.iloc[21][0] # quinoa
 
 # GA --> Growing area; GD --> Growing density
 GA_su = int(df.iloc[25][0]) # m^2
@@ -58,17 +47,17 @@ GD_qu = int(df.iloc[28][0])
 # edible plant mass:
 plant_ed_su = np.zeros(n_days) # sunflowers
 plant_ed_sp = np.zeros(n_days) # spinach
-plant_ed_qu = np.zeros(n_days) # quinoua 
+plant_ed_qu = np.zeros(n_days) # quinoa 
 
 # inedible plant mass:
 plant_ined_su = np.zeros(n_days) # sunflowers
 plant_ined_sp = np.zeros(n_days) # spinach
-plant_ined_qu = np.zeros(n_days) # quinoua 
+plant_ined_qu = np.zeros(n_days) # quinoa 
 
 # total biomass:
 plant_su = np.zeros(n_days) # sunflowers
 plant_sp = np.zeros(n_days) # spinach
-plant_qu = np.zeros(n_days) # quinoua
+plant_qu = np.zeros(n_days) # quinoa
 
 # total plant mass
 plant_ined = np.zeros(n_days) # inedible
@@ -84,10 +73,11 @@ plant_ed = np.zeros(n_days)   # edible
 shroom_ed = np.zeros(n_days) # edible mushrooms produced 
 sms = np.zeros(n_days) # spent mushroom substrate mass (g)
 shroom_lc = np.zeros(n_days) # liquid culture per day
+shroom_calories = np.zeros(n_days)
 #min_sub_to_start = 1000 # placeholder value. need 1000g inedible mass to start a mushroom run
 
 # Constants:
-shroom_GA = 0.33 # m^2 space required per 4 mushroom blocks
+shroom_GA = int(df.iloc[31][0]) # m^2 space required per 4 mushroom blocks
 
 ############################
 ## Initializing Mealworms ##
@@ -112,31 +102,31 @@ mw_carbs = np.zeros(n_days)
 mw_fats  =np.zeros(n_days)
 
 # time constants:
-mw_survival = 0.75
-t_egg = 21
-t_larvae = 84
-t_harvest = 56
-t_pupae = 14
-t_beetles = 84
-t_breed = 14
+mw_survival = int(df.iloc[49][0])
+t_egg = int(df.iloc[43][0])
+t_larvae = int(df.iloc[44][0])
+t_harvest = int(df.iloc[45][0])
+t_pupae = int(df.iloc[46][0])
+t_beetles = int(df.iloc[47][0])
+t_breed = int(df.iloc[48][0])
 
 # for loop
 mw_space = 20
-mw_start_pop = 0
-mw_eggs_start = 10000
-mw_beetle_start = 0
-mw_pupae_start = 0
+mw_start_pop = int(df.iloc[39][0])
+mw_eggs_start = int(df.iloc[38][0])
+mw_beetle_start = int(df.iloc[40][0])
+mw_pupae_start = int(df.iloc[39][0])
 
 # micronutrient breakdown
-calories_per_mw = 2.06*0.1
-protein_per_mw = 0.491*0.1
-carbs_per_mw = 0.031*0.1
-fats_per_mw = 0.35*0.1
+calories_per_mw = df.iloc[50][0]
+protein_per_mw = df.iloc[51][0]
+carbs_per_mw = df.iloc[52][0]
+fats_per_mw = df.iloc[53][0]
 
 # constants:
 harvest_1 = 850
 harvest_2 = 2500
-mw_GD = 500 #  growing density per sq ft
+mw_GD = int(df.iloc[41][0]) #  growing density per sq ft
 
 # initial values:
 mw_pop[0] = mw_start_pop
@@ -156,22 +146,22 @@ fish_eggs = np.zeros(n_days)
 fish_feed = np.zeros(n_days)
 fish_pop = np.zeros(n_days)
 fish_meat = np.zeros(n_days)
+fish_calories = np.zeros(n_days)
 
 fish_eggs[0] = 600 # starting eggs
-fish_pop[0] = 50 # starting fish
+fish_pop[0] = int(df.iloc[57][0]) # starting fish
 
-survival_rate = 0.75 # survival rate from egg to maturity
-growth_time = 183 # 183 days to grow to maturity?
+survival_rate = df.iloc[60][0] # survival rate from egg to maturity
+growth_time = int(df.iloc[59][0]) # 183 days to grow to maturity?
 days_eggs = 56  # counter for cycles (new fish every 56 days)
 
-avg_weight = 2.4 # kg average weight of a fish?
-amount_feed = 0.02  # the fish is eating 2% of its bodyweight
+avg_weight = df.iloc[61][0] # kg average weight of a fish?
+amount_feed = df.iloc[62][0]  # the fish is eating 2% of its bodyweight
 
-fish_cal = 98 # cal/kg?
-fish_prot = 0.26 #? g/kg? 
-fish_carb = 0
-fish_fat = 0.025
-
+fish_cal = int(df.iloc[63][0]) # cal/kg?
+fish_prot = df.iloc[64][0] #? g/kg? 
+fish_carb = int(df.iloc[65][0])
+fish_fat = df.iloc[66][0]
 
 
 ##################
@@ -197,151 +187,161 @@ for i in range(1,n_days):
         plant_ed_qu[i] = plant_qu[i] * HI_qu # edible quinoa mass
         plant_ined_qu[i] = (1-HI_qu)*plant_qu[i] # inedible quinoa mass
         
+        plant_ed[i] = plant_ed_qu[i] + plant_ed_su[i]
+        
     if i % H_sp == 0: # Harvest spinach every 42 days
-        plant_sp[i] = GA_sp * GD_sp # Total biomass = Growing area * growing density
+        plant_sp[i] = GA_sp * GD_sp # Total biomass = Growing plant_edg area * growing density
         plant_ed_sp[i] = plant_sp[i] * HI_sp # edible mass
         plant_ined_su[i] = (1-HI_su)*plant_su[i] # inedible mass
         
+        
     # Sum the inedible plant mass:
     plant_ined[i] = plant_ined_su[i] + plant_ined_sp[i] + plant_ined_qu[i]
+    plant_ed[i] = plant_ed_su[i]+plant_ed_sp[i]+plant_ed_qu[i]
     
-    if sum(plant_ined >= 9090): # once there is enough plant waste to produce 4, 5# bags:
+    if (sum(plant_ined) >= 9090): # once there is enough plant waste to produce 4, 5# bags:
         shroom_ed[i] = 680 # every 28 days, crew can harvest 680g mushrooms
         sms[i] = (1082.5 - 680) * 4 # the mass of spent substate equals the difference in substrate input minus fresh wt harvested
         plant_ined[i] = -9090 
-        
-
-
+        fish_feed[i] = sms[i]
+        shroom_calories[i] = shroom_ed[i] * 0.33
 
 #######################
 ### Mealworm Cycles ###
 #######################
 
 # LIMITING FACTORS
-mw_possible_1 = mw_GD * mw_space # max capacity worms
-# spent mushroom substrare limiting
-mw_possible_2 = sum(sms)/250     # max capacity worms based on sms (250g sms required)
-if mw_possible_1 < mw_possible_2: 
+#variables
+mw_possible_1 = mw_GD*mw_space
+mw_possible_2 = sum(sms/(250/150))
+if (mw_possible_1 < mw_possible_2):
     mw_possible = mw_possible_1
 else:
     mw_possible = mw_possible_2
-
-# Mealworm Cycle 1: 
-
-# first 2 weeks: eggs hatch
-for m in range (1,t_egg):
-        mw_eggs[m] = mw_eggs[m-7]-(mw_eggs_start*(0.3/2))
+    
+    # first 2 weeks: eggs hatch
+for m in range (1,21):
+        mw_eggs[m] = mw_eggs[m-1]*0.987
         mw_pop[m] = 0
         mw_pupae[m] = 0
         mw_beetles[m] = 0
-# weeks 3-14: mealworms growing
-for m in range (t_egg,t_harvest+t_egg):
+        if mw_pop[m] < 0: mw_pop[m] = 0
+        if mw_eggs[m] < 0: mw_eggs[m] = 0
+        if mw_pupae[m] < 0: mw_pupae[m] = 0
+        if mw_beetles[m] < 0: mw_beetles[m] = 0
+ #weeks 3-14: mealworms growing
+for m in range (21,105):
         mw_eggs[m] = 0
-        mw_pop[m] = mw_eggs[14]
+        mw_pop[m] = mw_eggs[20]
         mw_pupae[m] = 0
         mw_beetles[m] = 0
-# weeks 15-22: mealworms ready for harvest
-for m in range (t_harvest+t_egg,t_harvest+t_egg+t_larvae):
+        if mw_pop[m] < 0: mw_pop[m] = 0
+        if mw_eggs[m] < 0: mw_eggs[m] = 0
+        if mw_pupae[m] < 0: mw_pupae[m] = 0
+        if mw_beetles[m] < 0: mw_beetles[m] = 0
+#weeks 15-22: mealworms ready for harvest
+for m in range (105,161):
         mw_eggs[m] = 0
-        mw_pop[m] = mw_pop[m-7]-harvest_1
+        mw_pop[m] = mw_pop[m-1]-harvest_1
         mw_harvest[m] = mw_harvest[m]+harvest_1
         mw_pupae[m] = 0
         mw_beetles[m] = 0
-# weeks 23-24: mealworms in pupal stage
-for m in range (t_harvest+t_egg+t_larvae,t_harvest+t_egg+t_larvae+t_pupae):
+        if mw_pop[m] < 0: mw_pop[m] = 0
+        if mw_eggs[m] < 0: mw_eggs[m] = 0
+        if mw_pupae[m] < 0: mw_pupae[m] = 0
+        if mw_beetles[m] < 0: mw_beetles[m] = 0
+#weeks 23-24: mealworms in larval stage
+for m in range (161,175):
         mw_eggs[m] = 0
         mw_pop[m] = 0
-        mw_pupae[m] = mw_pop[t_harvest+t_egg+t_larvae+t_pupae-14]
+        mw_pupae[m] = mw_pop[142]
         mw_beetles[m] = 0
-# weeks 25-37: beetles living and reproducing
-for m in range (t_harvest+t_egg+t_larvae+t_pupae,t_harvest+t_egg+t_larvae+t_pupae+t_beetles):
-        mw_beetles[m] = mw_pupae[t_harvest+t_egg+t_larvae+t_pupae-7]
+        if mw_pop[m] < 0: mw_pop[m] = 0
+        if mw_eggs[m] < 0: mw_eggs[m] = 0
+        if mw_pupae[m] < 0: mw_pupae[m] = 0
+        if mw_beetles[m] < 0: mw_beetles[m] = 0
+#weeks 25-37: beetles living and reproducing
+for m in range (175,265):
+        mw_beetles[m] = mw_pupae[174]
+        if mw_pop[m] < 0: mw_pop[m] = 0
+        if mw_eggs[m] < 0: mw_eggs[m] = 0
+        if mw_pupae[m] < 0: mw_pupae[m] = 0
+        if mw_beetles[m] < 0: mw_beetles[m] = 0
 
-# Mealworm Cycle 2
-eggs_per_week = 0.5*mw_beetles[m-1]*40
-eggs_hatching = eggs_per_week*0.7
-mw_eggs[t_harvest+t_egg+t_larvae+t_pupae+14] = mw_eggs[m-7]+eggs_hatching
-
-for m in range (28,41,2):
-    mw_eggs[m] = mw_eggs[m-1]+eggs_hatching
-    mw_eggs[m+1] = mw_eggs[m]-eggs_hatching
-   
-for m in range (29,41):
-    mw_pop[m] = mw_pop[m-1]+eggs_hatching
-
-for m in range (41,n_days):
-     mw_pop[m] = mw_pop[m-1]-harvest_1
-     mw_harvest[m] = mw_harvest[m]+harvest_1
-     mw_pupae[m] = 0
-     mw_beetles[m] = 0
-     
-#all the eggs have hatched     
-for m in range (41,n_days):
-     mw_eggs[m] = 0
+#beetles reproducing   
+for r in range (183,n_days):
+        mw_beetles[r] = mw_beetles[r-1]*0.99
+        mw_beetles[183] = 0
+        mw_eggs[r] = mw_eggs[r-1]+(mw_beetles[r-14]*5/2)-(mw_beetles[r-28]*5/2)
+        mw_eggs[183+14] = 0
+        if mw_eggs[r] < 0:
+            mw_eggs[r] = 0
+            
+        mw_pop[r] = mw_pop[r-1]+mw_eggs[r-14]
+        if r < n_days-84:
+            mw_harvest[r+84] = mw_pop[r]
+        
+#print (mw_eggs[184]-mw_eggs[183])    
 
 #calculate totals     
 for m in range (0,n_days):
     mw_total[m] = mw_eggs[m]+mw_pupae[m]+mw_pop[m]+mw_beetles[m]
     mw_cumulative[m] = mw_cumulative[m-1]+mw_total[m]
-    mw_calories[m] = calories_per_mw*mw_harvest[m]   # calories and macronutrients
+    #calories and macronutrients
+    mw_calories[m] = calories_per_mw*mw_harvest[m]
+    mw_protein = protein_per_mw*mw_harvest[m]
+    mw_carbs = carbs_per_mw*mw_harvest[m]
+    mw_fats[m] = fats_per_mw*mw_harvest[m]
     
-for m in range (0,n_days):
-    if mw_pop[m] > mw_possible:
-        mw_pop[m] = mw_possible
 
-for m in range(0,n_days):
-    mw_pop[m] = mw_pop[m] /10000 # *10^-4
-    mw_cumulative[m] = mw_cumulative[m]/10000 
-
-print(mw_possible)
+for j in range (0,n_days):
+    if mw_pop[j] > mw_possible:
+        mw_pop[j] = mw_possible
+        
+mw_eggs = mw_eggs.astype(int)
+mw_pop = mw_pop.astype(int)
+mw_beetles = mw_beetles.astype(int)
+mw_pupae = mw_pupae.astype(int)
 
 
 ###################
 ### Fish Cycles ###
 ###################
 
-#feed_requirement = avg_weight * grown_fish * amount_feed # how much feed we need to keep fish alive in kg
-
-#mw_feed = feed * 0.67 # array of mealworm inputs (67% of total feed)
-#mush_feed = feed * 0.33 # sms input
-
-## 1 fish per crewmate per day
+# limiting factor:
+# feed_requirement = avg_weight * grown_fish * amount_feed # how much feed we need to keep fish alive in kg
 
 for i in range(1,n_days):
-    if n_days % days_eggs == 0: # every 56 days, we get more eggs
-        fish_eggs[i]=600 
     
-    if i % growth_time == 0:
-        fish_pop[i] = sum(fish_eggs[n_days-growth_time:n_days]) * 0.75 
-        fish_eggs[i] = -sum(fish_eggs[n_days-growth_time:n_days])
-        #fish_meat[i] = avg_weight * sum(fish_pop[(n_days-growth_time),n_days])
+    
+    if i % days_eggs == 0: # every 56 days, we get 600 more eggs
+        fish_eggs[i]=600 
         
+    for j in range(i+35, i+35+(survival_rate*fish_eggs[i]/10)):
+        fish_pop[j] = fish_eggs[i] / (n_days-j)     # hatched eggs turn into baby fish  
+        fish_eggs[j] = -fish_pop[j]                 # subtract the hatched eggs
+        
+        if (j+growth_time <= n_days):
+            fish_meat[j+growth_time] = avg_weight * n_crew ## harvests 1 fish per person
+            fish_pop[i] = -n_crew ## fish population reduces by 1 per crew member
+            fish_feed[i] = sum(sms) - ((amount_feed*n_crew)) # 
+                
+    fish_calories[i] = fish_cal * fish_meat[i]
+        
+
+############################################
 
 # calculate cumulative sums:
 shroom_series = pd.Series(shroom_ed)
-plant_ed_su_series = pd.Series(plant_ed_su)
-plant_ed_sp_series = pd.Series(plant_ed_sp)
-plant_ed_qu_series = pd.Series(plant_ed_qu)
+plant_ed_series = pd.Series(plant_ed)
 fish_series = pd.Series(fish_pop)
 
 shroom_cumsum = shroom_series.cumsum()
-plant_ed_su_cumsum = plant_ed_su_series.cumsum()
-plant_ed_sp_cumsum = plant_ed_sp_series.cumsum()
-plant_ed_qu_cumsum = plant_ed_qu_series.cumsum()
+plant_ed_cumsum = plant_ed_series.cumsum()
 fish_cumsum = fish_series.cumsum()
-
 
 # to calculate 7-day simple moving averages if desired: 
 shroom_sma = shroom_series.rolling(7).mean()
-
-# convert from g to kg:
-#for i in range(n_days):
- #   p_ed_su[i] = p_ed_su[i]/1000
- #   p_ed_sp[i] = p_ed_sp[i]/1000
-  #  p_ed_qu[i] = p_ed_qu[i]/1000
-  #  m_ed[i] = m_ed[i]/1000
-
-
 
 ##############
 ## Figures ###
@@ -357,12 +357,11 @@ plt.legend(["Sunflowers", "Spinach", "Quinoa", "Mushrooms"], loc="best")
 f0.show()
 
 f1 = plt.figure(1)
-plt.plot(time, plant_ed_su_cumsum, "b-", time, plant_ed_sp_cumsum, "g-", 
-         time, plant_ed_qu_cumsum, "c-", time, shroom_cumsum, "r-",
-         time, -mw_cumulative, "k-", time, fish_cumsum, "y-")
+plt.plot(time, plant_ed_cumsum, "g-", time, shroom_cumsum, "r-",
+         time, mw_cumulative, "k-", time, fish_cumsum, "b-")
 plt.title("Total Food Produced During Mission")
 plt.xlabel("time (days)"); plt.ylabel("food produced (g)")
-plt.legend(["Sunflowers", "Spinach", "Quinoa", "Mushrooms", "Mealworms", "Tilapia"], loc="best")   
+plt.legend(["Edible Plant Mass", "Mushrooms", "Mealworms x10^5", "Tilapia"], loc="best")   
 f1.show()
 
 f2 = plt.figure(2)
@@ -370,3 +369,14 @@ plt.plot(weeks,)  #
 plt.legend(['cumulative mealworms harvested'])
 plt.ylabel("population"); plt.xlabel("days")  
 f2.show()
+
+plt.plot(time,mw_pop,time,mw_eggs,time,mw_pupae,time,mw_beetles)
+plt.legend(['mealworm population','mealworm egg population','larvae population','adult beetle population'], loc = 'upper right') 
+plt.ylabel("population"); plt.xlabel("days")
+plt.show()
+
+ 
+plt.plot(time,mw_calories)  
+plt.legend(['mealworms calories'])
+plt.ylabel("calories"); plt.xlabel("days")  
+plt.show()
