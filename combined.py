@@ -1,8 +1,16 @@
 # Combined Final
 
+# -*- coding: utf-8 -*-
+"""
+Created on Sun May  2 19:28:39 2021
+
+@author: Torin
+"""
+  
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+
 
 # Database access:
 file_in="blss_data.csv"
@@ -63,7 +71,11 @@ plant_qu = np.zeros(n_days) # quinoa
 plant_ined = np.zeros(n_days) # inedible
 plant_ed = np.zeros(n_days)   # edible
 
-
+# caloric breakdown:
+plant_calories = np.zeros(n_days)
+plant_carb = np.zeros(n_days)
+plant_pro = np.zeros(n_days)
+plant_fat = np.zeros(n_days)
 
 ################################
 ##   Initializing Mushrooms   ##
@@ -74,6 +86,9 @@ shroom_ed = np.zeros(n_days) # edible mushrooms produced
 sms = np.zeros(n_days) # spent mushroom substrate mass (g)
 shroom_lc = np.zeros(n_days) # liquid culture per day
 shroom_calories = np.zeros(n_days)
+shroom_pro = np.zeros(n_days)
+shroom_carb = np.zeros(n_days)
+shroom_fat = np.zeros(n_days)
 #min_sub_to_start = 1000 # placeholder value. need 1000g inedible mass to start a mushroom run
 
 # Constants:
@@ -146,7 +161,11 @@ fish_eggs = np.zeros(n_days)
 fish_feed = np.zeros(n_days)
 fish_pop = np.zeros(n_days)
 fish_meat = np.zeros(n_days)
+
 fish_calories = np.zeros(n_days)
+fish_carb = np.zeros(n_days)
+fish_pro = np.zeros(n_days)
+fish_fat = np.zeros(n_days)
 
 fish_eggs[0] = 600 # starting eggs
 fish_pop[0] = int(df.iloc[57][0]) # starting fish
@@ -158,10 +177,10 @@ days_eggs = 56  # counter for cycles (new fish every 56 days)
 avg_weight = df.iloc[61][0] # kg average weight of a fish?
 amount_feed = df.iloc[62][0]  # the fish is eating 2% of its bodyweight
 
-fish_cal = int(df.iloc[63][0]) # cal/kg?
-fish_prot = df.iloc[64][0] #? g/kg? 
-fish_carb = int(df.iloc[65][0])
-fish_fat = df.iloc[66][0]
+fish_cals = df.iloc[63][0] # cal/kg?
+fish_protein = df.iloc[64][0] #? g/kg? 
+fish_carbs = df.iloc[65][0]
+fish_fats = df.iloc[66][0]
 
 
 ##################
@@ -199,12 +218,24 @@ for i in range(1,n_days):
     plant_ined[i] = plant_ined_su[i] + plant_ined_sp[i] + plant_ined_qu[i]
     plant_ed[i] = plant_ed_su[i]+plant_ed_sp[i]+plant_ed_qu[i]
     
+    plant_calories[i] = 0.23*plant_sp[i] + 6.25*plant_su[i] + 3.68*plant_qu[i]
+    plant_carb[i] = .036*plant_sp[i] + .15*plant_su[i] + 3.68*plant_qu[i]
+    plant_pro[i] = .0286*plant_sp[i] + .225*plant_su[i] + .1412*plant_qu[i]
+    plant_fat[i] = 0.0039*plant_sp[i] + .575*plant_su[i] + .0607*plant_qu[i]
+    
+    
+    
     if (sum(plant_ined) >= 9090): # once there is enough plant waste to produce 4, 5# bags:
-        shroom_ed[i] = 680 # every 28 days, crew can harvest 680g mushrooms
+        for j in range(i,i+28): # every 28 days, crew can harvest 680g mushrooms. we ration this out across 28 days.
+            shroom_ed[j] = 680/28
+            shroom_calories[j]=shroom_ed[j]*0.33
+            shroom_carb[i]=shroom_ed[j]*0.0609
+            shroom_pro[i]=shroom_ed[j]*0.0331
+            shroom_fat[i]=shroom_ed[j]*0.0041
+
         sms[i] = (1082.5 - 680) * 4 # the mass of spent substate equals the difference in substrate input minus fresh wt harvested
-        plant_ined[i] = -9090 
-        fish_feed[i] = sms[i]
-        shroom_calories[i] = shroom_ed[i] * 0.33
+        plant_ined[i] = -9090 # use up 9090g of inedible plant mass 
+    
 
 #######################
 ### Mealworm Cycles ###
@@ -289,8 +320,8 @@ for m in range (0,n_days):
     mw_cumulative[m] = mw_cumulative[m-1]+mw_total[m]
     #calories and macronutrients
     mw_calories[m] = calories_per_mw*mw_harvest[m]
-    mw_protein = protein_per_mw*mw_harvest[m]
-    mw_carbs = carbs_per_mw*mw_harvest[m]
+    mw_protein[m] = protein_per_mw*mw_harvest[m]
+    mw_carbs[m] = carbs_per_mw*mw_harvest[m]
     mw_fats[m] = fats_per_mw*mw_harvest[m]
     
 
@@ -317,24 +348,30 @@ for i in range(1,n_days):
     if i % days_eggs == 0: # every 56 days, we get 600 more eggs
         fish_eggs[i]=600 
         
-    for j in range(i+35, i+35+(survival_rate*fish_eggs[i]/10)):
+    for j in range(i+35, n_days):
         fish_pop[j] = fish_eggs[i] / (n_days-j)     # hatched eggs turn into baby fish  
         fish_eggs[j] = -fish_pop[j]                 # subtract the hatched eggs
         
-        if (j+growth_time <= n_days):
-            fish_meat[j+growth_time] = avg_weight * n_crew ## harvests 1 fish per person
+        if (j >= growth_time):
+            fish_meat[j] = avg_weight * n_crew * 1000 ## harvests 1 fish per person, convert to grams
             fish_pop[i] = -n_crew ## fish population reduces by 1 per crew member
-            fish_feed[i] = sum(sms) - ((amount_feed*n_crew)) # 
+            fish_feed[i] = sum(mw_pop[0:i] - (amount_feed*n_crew)) # 
                 
-    fish_calories[i] = fish_cal * fish_meat[i]
+    fish_calories[i] = fish_cals * fish_meat[i]
+    fish_carb[i] = fish_carbs * fish_meat[i]
+    fish_pro[i] = fish_protein * fish_meat[i]
+    fish_fat[i] = fish_fats * fish_meat[i]
         
 
 ############################################
 
+for i in range(1,n_days):
+    shroom_ed[i] = shroom_ed[i] * 1000 ## scale up mushrooms so they are visible on graphs
+
 # calculate cumulative sums:
 shroom_series = pd.Series(shroom_ed)
 plant_ed_series = pd.Series(plant_ed)
-fish_series = pd.Series(fish_pop)
+fish_series = pd.Series(fish_meat)
 
 shroom_cumsum = shroom_series.cumsum()
 plant_ed_cumsum = plant_ed_series.cumsum()
@@ -350,10 +387,10 @@ shroom_sma = shroom_series.rolling(7).mean()
 time = np.linspace(1, n_days, n_days)
     
 f0 = plt.figure(0)    
-plt.plot(time, plant_ed_su, "b-", time, plant_ed, "g-", time, plant_ed_qu, "c-", time, shroom_ed, "r-")
+plt.plot(time, plant_ed_su, time, plant_ed, time, plant_ed_qu, time, shroom_ed, time,mw_pop, time, fish_meat)
 plt.title("Food produced over time")
 plt.xlabel("time (days)"); plt.ylabel("food produced (g)")
-plt.legend(["Sunflowers", "Spinach", "Quinoa", "Mushrooms"], loc="best")   
+plt.legend(["Sunflowers", "Spinach", "Quinoa", "Mushrooms x 10^-3", "Mealworms", "Tilapia"], loc="best")   
 f0.show()
 
 f1 = plt.figure(1)
@@ -361,7 +398,7 @@ plt.plot(time, plant_ed_cumsum, "g-", time, shroom_cumsum, "r-",
          time, mw_cumulative, "k-", time, fish_cumsum, "b-")
 plt.title("Total Food Produced During Mission")
 plt.xlabel("time (days)"); plt.ylabel("food produced (g)")
-plt.legend(["Edible Plant Mass", "Mushrooms", "Mealworms x10^5", "Tilapia"], loc="best")   
+plt.legend(["Edible Plant Mass", "Mushrooms", "Mealworms", "Tilapia"], loc="best")   
 f1.show()
 
 f2 = plt.figure(2)
@@ -370,13 +407,9 @@ plt.legend(['cumulative mealworms harvested'])
 plt.ylabel("population"); plt.xlabel("days")  
 f2.show()
 
-plt.plot(time,mw_pop,time,mw_eggs,time,mw_pupae,time,mw_beetles)
-plt.legend(['mealworm population','mealworm egg population','larvae population','adult beetle population'], loc = 'upper right') 
-plt.ylabel("population"); plt.xlabel("days")
-plt.show()
-
  
-plt.plot(time,mw_calories)  
-plt.legend(['mealworms calories'])
+plt.plot(time,mw_calories, time, fish_calories, time, shroom_calories, time, plant_calories)  
+plt.legend(['mealworms', 'fish', 'mushrooms', 'plants'])
+plt.title("Calories produced over time")
 plt.ylabel("calories"); plt.xlabel("days")  
 plt.show()
